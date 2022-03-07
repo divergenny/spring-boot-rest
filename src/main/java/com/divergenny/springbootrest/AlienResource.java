@@ -18,14 +18,29 @@ public class AlienResource {
         return aliens;
     }
 
-    @GetMapping("aliens/{id}")
+    @GetMapping("/aliens/{id}")
     public Alien getAlien(@PathVariable Long id) {
         return repo.findAlienById(id);
     }
 
     @PostMapping("/aliens")
     public Alien createAlien(@RequestBody Alien alien) {
+        if (getAlien(alien.getId()).getId() != 0) {
+            repo.save(alien);
+        }
+        return alien;
+    }
+
+    @PutMapping
+    public Alien updateOrCreateAlien(@RequestBody Alien alien) {
         repo.save(alien);
+        return alien;
+    }
+
+    @DeleteMapping("/alien/delete/{id}")
+    public Alien deleteAlien(@PathVariable("id") long id) {
+        Alien alien = getAlien(id);
+        repo.deleteById(id);
         return alien;
     }
 }
